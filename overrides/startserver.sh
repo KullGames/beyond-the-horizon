@@ -10,6 +10,17 @@ JVM_ARGUMENTS="-XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:MaxGCPauseMilli
 # Make sure this matches the Forge version of the server if you update.
 FORGE_VERSION="1.20.1-47.3.25"
 
+# Check for flag
+KEEP_RUN_SH=false
+for arg in "$@"; do
+  case $arg in
+    --keep-run-sh)
+      KEEP_RUN_SH=true
+      shift
+      ;;
+  esac
+done
+
 # Install Minecraft Forge if it isn't already installed.
 FILE=./libraries/net/minecraftforge/forge/${FORGE_VERSION}
 if [ ! -d "${FILE}" ]; then
@@ -32,7 +43,7 @@ if [ -f "${INSTALLER_FILE}" ]; then
         echo "Deleting the unnecessary file."
         rm run.bat
     fi
-    if [ -f "./run.sh" ]; then
+    if [ "$KEEP_RUN_SH" = false ] && [ -f "./run.sh" ]; then
         echo "Deleting the unnecessary file."
         rm run.sh
     fi
